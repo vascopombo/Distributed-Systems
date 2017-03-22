@@ -6,7 +6,7 @@ Miguel Marques 76479 miguel.cg.marques@gmail.com
 
 Vasco Pombo 78029 vasco_pombo@hotmail.com
 
-Gonçalo Santos 77915 FALTA_MAIL
+Gonçalo Santos 77915 goncalossantos@msn.com
 
 
 -------------------------------------------------------------------------------
