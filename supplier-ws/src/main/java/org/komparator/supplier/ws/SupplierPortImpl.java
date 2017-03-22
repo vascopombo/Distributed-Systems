@@ -70,6 +70,8 @@ public class SupplierPortImpl implements SupplierPortType {
 		
 		Supplier supplier = Supplier.getInstance();
 		String prcId = "";
+		
+		
 		try {
 			prcId = supplier.buyProduct(productId, quantity);
 		} catch (QuantityException e) {
