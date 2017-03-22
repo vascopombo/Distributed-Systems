@@ -2,6 +2,7 @@ package org.komparator.supplier.ws.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
@@ -80,7 +81,7 @@ public class BuyProductIT extends BaseIT {
 	// bad input tests
 
 	@Test(expected = BadProductId_Exception.class)
-	public void getProductNullTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+	public void buyProductNullTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
 		client.buyProduct(null,1);
 	}
 
@@ -129,6 +130,11 @@ public class BuyProductIT extends BaseIT {
 	public void buyProductNonExistentProductTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
 		client.buyProduct("X5", 12);
 	}		
+	
+	@Test(expected = BadProductId_Exception.class)
+	public void buyProductLowercaseNotExistsTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("x1",1);
+	}
 	
 	
 	// main tests
