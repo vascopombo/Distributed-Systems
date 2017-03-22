@@ -69,13 +69,16 @@ public class SupplierPortImpl implements SupplierPortType {
 			throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
 		
 		Supplier supplier = Supplier.getInstance();
-		Product p = supplier.getProduct(productId);
-		int availableQuantity = p.getQuantity();
-		p.setQuantity(availableQuantity - quantity);
+		String prcId = "";
+		try {
+			prcId = supplier.buyProduct(productId, quantity);
+		} catch (QuantityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
-		
-		return null;
+		return prcId;
 	}
 
 	// Auxiliary operations --------------------------------------------------
