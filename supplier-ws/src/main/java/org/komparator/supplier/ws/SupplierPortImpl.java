@@ -68,7 +68,24 @@ public class SupplierPortImpl implements SupplierPortType {
 	public String buyProduct(String productId, int quantity)
 			throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
 		
+//		if(productId == null)
+//			throwBadProductId("Product identifier cannot be null!");
+//		productId = productId.trim();
+//		if (productId.length() == 0)
+//			throwBadProductId("Product identifier cannot be empty or whitespace!");		
+		if(getProduct(productId) == null )
+			throwBadProductId("Product does not exist!");
+
+		
 		Supplier supplier = Supplier.getInstance();
+		
+		if(quantity < 1)
+			throwBadQuantity("Quantity must be positive!");
+
+		
+		if(getProduct(productId).getQuantity() < quantity)
+			throwInsufficientQuantity("Insufficient quantity available!");
+		
 		String prcId = "";
 		
 		
@@ -109,8 +126,7 @@ public class SupplierPortImpl implements SupplierPortType {
 		if (productToCreate == null)
 			throwBadProduct("Product view cannot be null!");
 		// check id
-		String productId = productToCreate.getId();
-		if (productId == null)
+		String productId = productToCreate.getId();		if (productId == null)
 			throwBadProductId("Product identifier cannot be null!");
 		productId = productId.trim();
 		if (productId.length() == 0)

@@ -2,6 +2,7 @@ package org.komparator.supplier.ws.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,6 +23,17 @@ public class BuyProductIT extends BaseIT {
 	// one-time initialization and clean-up
 	@BeforeClass
 	public static void oneTimeSetUp() throws BadProductId_Exception, BadProduct_Exception {
+	}
+
+	@AfterClass
+	public static void oneTimeTearDown() {
+	}
+
+	// members
+
+	// initialization and clean-up for each test
+	@Before
+	public void setUp() throws BadProductId_Exception, BadProduct_Exception {
 		// clear remote service state before all tests
 		client.clear();
 
@@ -51,18 +63,7 @@ public class BuyProductIT extends BaseIT {
 			product.setPrice(30);
 			product.setQuantity(30);
 			client.createProduct(product);
-		}
-	}
-
-	@AfterClass
-	public static void oneTimeTearDown() {
-	}
-
-	// members
-
-	// initialization and clean-up for each test
-	@Before
-	public void setUp() {
+		}		
 	}
 
 	@After
@@ -78,23 +79,97 @@ public class BuyProductIT extends BaseIT {
 
 	// bad input tests
 
-	// TODO
-	
+	@Test(expected = BadProductId_Exception.class)
+	public void getProductNullTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct(null,1);
+	}
 
+	@Test(expected = BadProductId_Exception.class)
+	public void buyProductEmptyTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("",1);
+	}
+
+	@Test(expected = BadProductId_Exception.class)
+	public void buyProductWhitespaceTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct(" ",1);
+	}
+
+	@Test(expected = BadProductId_Exception.class)
+	public void buyProductTabTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("\t",1);
+	}
+
+	@Test(expected = BadProductId_Exception.class)
+	public void buyProductNewlineTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("\n",1);
+	}
+	
+	@Test(expected = BadQuantity_Exception.class)
+	public void buyProductNegativeQuantityTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X1",-5);
+	}	
+
+	@Test(expected = BadQuantity_Exception.class)
+	public void buyProductZeroQuantityTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X1", 0);
+	}
+	
+	@Test(expected = InsufficientQuantity_Exception.class)
+	public void buyProductInsufficientQuantityTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X1", 12);
+	}
+	
+	@Test(expected = InsufficientQuantity_Exception.class)
+	public void buyProductInsufficientQuantityTwiceTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X1", 6);
+		client.buyProduct("X1", 6);
+	}		
+	
+	@Test(expected = BadProductId_Exception.class)
+	public void buyProductNonExistentProductTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X5", 12);
+	}		
+	
+	
 	// main tests
 	
 	@Test
-	public void checkPurchaseIdTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
-		String result = client.buyProduct("X1",5);
+	public void buyProductSuccessTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		String result = client.buyProduct("X1",6);
 		List<PurchaseView> prc = client.listPurchases();
 		String prcId = prc.get(0).getId();
+		String prdId = prc.get(0).getProductId();
 		assertEquals(result,prcId);
+		assertEquals(4,client.getProduct("X1").getQuantity());
+		assertEquals(prdId,"X1");
 	}
+	
 	@Test
-	public void checkProductIdTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
-		client.buyProduct("X1",5);
+	public void buyProductSameTwiceTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		String id1 = client.buyProduct("X1",2);
+		String id2 = client.buyProduct("X1", 2);
 		List<PurchaseView> prc = client.listPurchases();
-		String prcId = prc.get(0).getProductId();
-		assertEquals(prcId,"X1");
+		assertNotEquals(id1,id2);
+		assertEquals(2,prc.size());
+		assertEquals(6,client.getProduct("X1").getQuantity());
+	}
+	
+	@Test
+	public void buyProductSeveralDifferentTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X1", 1);
+		client.buyProduct("Y2", 3);
+		client.buyProduct("X1", 2);
+		client.buyProduct("Y2", 3);
+		client.buyProduct("Z3", 4);
+		client.buyProduct("Z3", 5);
+		client.buyProduct("Z3", 3);
+		List<PurchaseView> prc = client.listPurchases();
+		assertEquals(7,prc.size());
+	}
+	
+	@Test
+	public void buyProductExactQuantityTest() throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
+		client.buyProduct("X1", 10);
+		assertEquals(0,client.getProduct("X1").getQuantity());
 	}
 }
