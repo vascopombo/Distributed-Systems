@@ -1,14 +1,12 @@
 # Projeto de Sistemas Distribuídos 2016-2017 #
 
-Grupo CXX
-*(preencher com identificador de grupo e depois apagar esta linha)*
+Grupo T35
 
-... ... ...
+Miguel Marques 76479 miguel.cg.marques@gmail.com
 
-... ... ...
+Vasco Pombo 78029 FALTA_MAIL
 
-... ... ...
-*(preencher com nome, número e email de membro do grupo e depois apagar esta linha)*
+Gonçalo Santos 77915 FALTA_MAIL
 
 
 -------------------------------------------------------------------------------
