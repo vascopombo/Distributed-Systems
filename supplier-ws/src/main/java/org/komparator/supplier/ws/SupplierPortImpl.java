@@ -51,19 +51,27 @@ public class SupplierPortImpl implements SupplierPortType {
 	
 	@Override
 	public List<ProductView> searchProducts(String descText) throws BadText_Exception {
-		// TODO
+
+		List<ProductView> products = listProducts();
+		List<ProductView> matches = new ArrayList<ProductView>();
 		
+		for (ProductView prd: products){
+			if(prd.getDesc().contains(descText)){
+				matches.add(prd);
+			}
+		}
 		
-		
-		
-		return null;
+		return matches;
 	}
 
 	@Override
 	public String buyProduct(String productId, int quantity)
 			throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
-		// TODO
 		
+		Supplier supplier = Supplier.getInstance();
+		Product p = supplier.getProduct(productId);
+		int availableQuantity = p.getQuantity();
+		p.setQuantity(availableQuantity - quantity);
 		
 		
 		
