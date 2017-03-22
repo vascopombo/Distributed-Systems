@@ -2,6 +2,7 @@ package org.komparator.supplier.ws.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -141,6 +142,18 @@ public class SearchProductsIT extends BaseIT {
 		assertEquals(prodList.get(0).getDesc(),prodList.get(1).getDesc());
 	}
 	
+	@Test
+	public void searchProductsDoesNotExistTest() throws BadText_Exception {
+		List<ProductView> prodList = client.searchProducts("Tennis ball");
+		assertEquals(0,prodList.size());
+	}	
 	
+	@Test
+	public void searchProductsLowercaseNotExistsTest() throws BadText_Exception {
+		// product descriptions are case sensitive,
+		// so "x1" is not the same as "X1"
+		List<ProductView> prodList = client.searchProducts("bLiTz BaLl");
+		assertEquals(0,prodList.size());
+	}
 
 }
