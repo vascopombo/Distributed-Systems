@@ -75,8 +75,8 @@ public class SupplierPortImpl implements SupplierPortType {
 	public String buyProduct(String productId, int quantity)
 			throws BadProductId_Exception, BadQuantity_Exception, InsufficientQuantity_Exception {
 		
-//		if(productId == null)
-//			throwBadProductId("Product identifier cannot be null!");
+//		if(productId.contains(" "))
+//			throwBadProductId("Product identifier cannot have spaces!");
 //		productId = productId.trim();
 //		if (productId.length() == 0)
 //			throwBadProductId("Product identifier cannot be empty or whitespace!");		
