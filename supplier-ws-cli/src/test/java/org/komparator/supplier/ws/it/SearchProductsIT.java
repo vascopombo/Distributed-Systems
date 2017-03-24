@@ -70,6 +70,14 @@ public class SearchProductsIT extends BaseIT {
 			product.setQuantity(30);
 			client.createProduct(product);
 		}
+		{
+			ProductView product = new ProductView();
+			product.setId("U6");
+			product.setDesc("Umbrella");
+			product.setPrice(30);
+			product.setQuantity(30);
+			client.createProduct(product);
+		}		
 	}
 
 	@AfterClass
@@ -139,14 +147,29 @@ public class SearchProductsIT extends BaseIT {
 	public void searchProductsTwoInstancesTest() throws BadText_Exception {
 		List<ProductView> prodList = client.searchProducts("Blitz ball");
 		assertEquals(2,prodList.size());
-		assertEquals(prodList.get(0).getDesc(),prodList.get(1).getDesc());
+		assertEquals("Blitz ball",prodList.get(0).getDesc(),prodList.get(1).getDesc());
 	}
+	
+	@Test
+	public void searchProductsBigDescriptionTest() throws BadText_Exception {
+		List<ProductView> prodList = client.searchProducts("ball");
+		assertEquals(5,prodList.size());
+		int wrong = 0;
+		for(ProductView prod: prodList){
+			if(prod.getDesc().contains("brella")){
+				wrong = 1;
+				break;
+			}
+		}
+		assertEquals(0,wrong);
+	}	
 	
 	@Test
 	public void searchProductsDoesNotExistTest() throws BadText_Exception {
 		List<ProductView> prodList = client.searchProducts("Tennis ball");
 		assertEquals(0,prodList.size());
-	}	
+	}
+	
 	
 	@Test
 	public void searchProductsLowercaseNotExistsTest() throws BadText_Exception {
