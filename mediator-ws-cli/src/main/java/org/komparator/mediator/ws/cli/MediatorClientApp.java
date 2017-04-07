@@ -1,16 +1,12 @@
-package org.komparator.supplier.ws.cli;
+package org.komparator.mediator.ws.cli;
 
-import org.komparator.supplier.ws.cli.SupplierClient;
-import org.komparator.supplier.ws.cli.SupplierClientApp;
+public class MediatorClientApp {
 
-/** Main class that starts the Supplier Web Service client. */
-public class SupplierClientApp {
-
-	public static void main(String[] args) throws Exception {
-	       // Check arguments
+    public static void main(String[] args) throws Exception {
+        // Check arguments
         if (args.length == 0) {
             System.err.println("Argument(s) missing!");
-            System.err.println("Usage: java " + SupplierClientApp.class.getName()
+            System.err.println("Usage: java " + MediatorClientApp.class.getName()
                     + " wsURL OR uddiURL wsName");
             return;
         }
@@ -25,21 +21,23 @@ public class SupplierClientApp {
         }
 
         // Create client
-        SupplierClient client = null;
+        MediatorClient client = null;
 
         if (wsURL != null) {
             System.out.printf("Creating client for server at %s%n", wsURL);
-            client = new SupplierClient(wsURL);
+            client = new MediatorClient(wsURL);
         } else if (uddiURL != null) {
             System.out.printf("Creating client using UDDI at %s for server with name %s%n",
                 uddiURL, wsName);
-            client = new SupplierClient(wsName, uddiURL);
+            client = new MediatorClient(uddiURL, wsName);
         }
 
-		System.out.println("Invoke ping()...");
-		String result = client.ping("client");
-		System.out.print("Result: ");
-		System.out.println(result);
-	}
+        // the following remote invocations are just basic examples
+        // the actual tests are made using JUnit
 
+        System.out.println("Invoke ping()...");
+        String result = client.ping("client");
+        System.out.println(result);
+
+    }
 }

@@ -90,8 +90,8 @@ public class SupplierPortImpl implements SupplierPortType {
 			throwBadQuantity("Quantity must be positive!");
 
 		
-		if(getProduct(productId).getQuantity() < quantity)
-			throwInsufficientQuantity("Insufficient quantity available!");
+		//if(getProduct(productId).getQuantity() < quantity)
+		//	throwInsufficientQuantity("Insufficient quantity available!");
 		
 		String prcId = "";
 		
@@ -99,8 +99,8 @@ public class SupplierPortImpl implements SupplierPortType {
 		try {
 			prcId = supplier.buyProduct(productId, quantity);
 		} catch (QuantityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throwInsufficientQuantity("Insufficient quantity available!");
+			//e.printStackTrace();
 		}
 		
 		

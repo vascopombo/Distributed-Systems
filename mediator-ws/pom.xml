@@ -1,10 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- http://maven.apache.org/pom.html#Quick_Overview -->
-
     <groupId>org.komparator.T35</groupId>
-    <artifactId>supplier-ws-cli</artifactId>
+    <artifactId>mediator-ws</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -17,49 +15,40 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <wsdl.directory>${basedir}/../supplier-ws/src/main/resources</wsdl.directory>
-        <wsdl.filename>supplier.1_0.wsdl</wsdl.filename>
-		<ws.name>T35_Supplier1</ws.name>
-        <mainclass>org.komparator.supplier.ws.cli.SupplierClientApp</mainclass>
-        <uddi.url>http://t35:56vMW2kU@uddi.sd.rnl.tecnico.ulisboa.pt:9090/</uddi.url>
-        <ws.url>http://localhost:8081/supplier-ws/endpoint</ws.url>
+        <mainclass>org.komparator.mediator.ws.MediatorApp</mainclass>
+
+        
+      	<uddi.url>http://t35:56vMW2kU@uddi.sd.rnl.tecnico.ulisboa.pt:9090/</uddi.url>
+        <ws.name>T35_Mediator</ws.name>
+        <ws.url>http://localhost:8080/mediator-ws/endpoint</ws.url>
     </properties>
 
     <dependencies>
-        <!-- JAX-WS -->
+    	<!-- JAX-WS -->
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
             <version>2.2.10</version>
         </dependency>
-        <!-- JUnit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
         <!-- UDDI Naming -->
-	    <dependency>
-	        <groupId>pt.ulisboa.tecnico.sdis</groupId>
-	        <artifactId>uddi-naming</artifactId>
-	        <version>1.2</version>
-	    </dependency>
+        <dependency>
+            <groupId>pt.ulisboa.tecnico.sdis</groupId>
+            <artifactId>uddi-naming</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.komparator.T35</groupId>
+        	<artifactId>supplier-ws-cli</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+        	<groupId>org.komparator.T35</groupId>
+        	<artifactId>cc-ws-cli</artifactId>
+        	<version>1.0-SNAPSHOT</version>
+    	</dependency>        
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>true</filtering>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -74,10 +63,7 @@
                 </executions>
                 <configuration>
                     <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
-                    <wsdlDirectory>${wsdl.directory}</wsdlDirectory>
-                    <wsdlFiles>
-                        <wsdlFile>${wsdl.filename}</wsdlFile>
-                    </wsdlFiles>
+                    <wsdlDirectory>${basedir}/src/main/resources</wsdlDirectory>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -86,18 +72,6 @@
                         <version>2.2.10</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -115,9 +89,9 @@
                     <killAfter>-1</killAfter>
                     <mainClass>${mainclass}</mainClass>
                     <arguments>
-						<!-- <argument>${ws.url}</argument> -->
                         <argument>${uddi.url}</argument>
                         <argument>${ws.name}</argument>
+                        <argument>${ws.url}</argument>
                     </arguments>
                 </configuration>
             </plugin>

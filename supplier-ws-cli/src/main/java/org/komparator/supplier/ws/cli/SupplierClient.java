@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.xml.ws.BindingProvider;
 
+
 import org.komparator.supplier.ws.BadProductId_Exception;
 import org.komparator.supplier.ws.BadProduct_Exception;
 import org.komparator.supplier.ws.BadQuantity_Exception;
@@ -16,6 +17,8 @@ import org.komparator.supplier.ws.ProductView;
 import org.komparator.supplier.ws.PurchaseView;
 import org.komparator.supplier.ws.SupplierPortType;
 import org.komparator.supplier.ws.SupplierService;
+
+import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 
 /**
  * Client port wrapper.
@@ -33,6 +36,8 @@ public class SupplierClient implements SupplierPortType {
 
 	/** WS end point address */
 	private String wsURL = null; // default value is defined inside WSDL
+	private String wsName = null;
+	private String uddiURL = null;
 
 	public String getWsURL() {
 		return wsURL;
@@ -55,6 +60,38 @@ public class SupplierClient implements SupplierPortType {
 		createStub();
 	}
 
+	/** constructor for uddi based ws */
+	public SupplierClient(String wsName, String uddiUrl) throws SupplierClientException {
+		this.wsName = wsName;
+		this.uddiURL = uddiUrl;
+		uddiLookup();
+		createStub();
+	}	
+	
+    /** UDDI lookup */
+    private void uddiLookup() throws SupplierClientException {
+        try {
+            if (verbose)
+                System.out.printf("Contacting UDDI at %s%n", uddiURL);
+            UDDINaming uddiNaming = new UDDINaming(uddiURL);
+
+            if (verbose)
+                System.out.printf("Looking for '%s'%n", wsName);
+            wsURL = uddiNaming.lookup(wsName);
+        } catch (Exception e) {
+            String msg = String.format("Client failed lookup on UDDI at %s!",
+                    uddiURL);
+            throw new SupplierClientException(msg, e);
+        }
+
+        if (wsURL == null) {
+            String msg = String.format(
+                    "Service with name %s not found on UDDI at %s", wsName,
+                    uddiURL);
+            throw new SupplierClientException(msg);
+        }
+    }
+	
 	/** Stub creation and configuration */
 	private void createStub() {
 		if (verbose)
