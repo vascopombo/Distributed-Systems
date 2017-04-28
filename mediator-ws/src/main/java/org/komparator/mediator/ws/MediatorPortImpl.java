@@ -95,7 +95,6 @@ public class MediatorPortImpl implements MediatorPortType {
 			Collections.sort(results, (item1, item2) -> item1.getPrice() - item2.getPrice());
 			
 		} catch (UDDINamingException e) {
-			e.printStackTrace();
 		} catch (BadProductId_Exception e) {
 			throwInvalidItemId("Item ID is invalid!");
 		}
@@ -128,11 +127,7 @@ public class MediatorPortImpl implements MediatorPortType {
 			
 			orderByDescThenPrice(results);
 		} catch (UDDINamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SupplierClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (BadText_Exception e) {
 			throwInvalidText("Text is invalid!");
 		}
@@ -210,10 +205,7 @@ public class MediatorPortImpl implements MediatorPortType {
 		
 		
 		} catch (CreditCardClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (UDDINamingException e){
-			e.printStackTrace();
 		}
 		
 
@@ -386,15 +378,9 @@ public class MediatorPortImpl implements MediatorPortType {
 			SupplierClient clnt = new SupplierClient(record.getUrl());
 			ProductView result = clnt.getProduct(item.getProductId());
 			return result;
-		} catch (UDDINamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (UDDINamingException e) {;
 		} catch (SupplierClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (BadProductId_Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		

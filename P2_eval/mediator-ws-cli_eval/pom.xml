@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- http://maven.apache.org/pom.html#Quick_Overview -->
 
-    <groupId>org.komparator.T35</groupId>
-    <artifactId>supplier-ws-cli</artifactId>
+    <groupId>org.komparator.eval</groupId>
+    <artifactId>mediator-ws-cli</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -17,12 +17,22 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <wsdl.directory>${basedir}/../supplier-ws/src/main/resources</wsdl.directory>
-        <wsdl.filename>supplier.1_0.wsdl</wsdl.filename>
-		<ws.name>T35_Supplier1</ws.name>
-        <mainclass>org.komparator.supplier.ws.cli.SupplierClientApp</mainclass>
-        <uddi.url>http://t35:56vMW2kU@uddi.sd.rnl.tecnico.ulisboa.pt:9090/</uddi.url>
-        <ws.url>http://localhost:8081/supplier-ws/endpoint</ws.url>
+        <wsdl.directory>..</wsdl.directory>
+        <wsdl.filename>mediator.1_0.wsdl</wsdl.filename>
+
+        <mainclass>org.komparator.mediator.ws.cli.MediatorClientApp</mainclass>
+
+        <group.id>T35</group.id>
+
+        <uddi.enabled>true</uddi.enabled>
+        <uddi.url>http://t35:56vMW2kU@uddi.sd.rnl.tecnico.ulisboa.pt:9090</uddi.url>
+
+        <ws.name>${group.id}_Mediator</ws.name>
+        <ws.url>http://localhost:8080/mediator-ws/endpoint</ws.url>
+        
+        <supplier.ws.name>${group.id}_Supplier</supplier.ws.name>
+        <!-- The url below contains a placeholder ($i) that will be replaced in run-time -->
+        <supplier.ws.url>http://localhost:808$i/supplier-ws/endpoint</supplier.ws.url>
     </properties>
 
     <dependencies>
@@ -32,6 +42,19 @@
             <artifactId>jaxws-rt</artifactId>
             <version>2.2.10</version>
         </dependency>
+        <!-- UDDI Naming -->
+        <dependency>
+            <groupId>pt.ulisboa.tecnico.sdis</groupId>
+            <artifactId>uddi-naming</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <!-- JMockit - must appear before JUnit -->
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>1.21</version>
+            <scope>test</scope>
+        </dependency>
         <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
@@ -39,18 +62,13 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <!-- UDDI Naming -->
-	    <dependency>
-	        <groupId>pt.ulisboa.tecnico.sdis</groupId>
-	        <artifactId>uddi-naming</artifactId>
-	        <version>1.2</version>
-	    </dependency>
-	   <dependency>
-		<groupId>org.komparator.T35</groupId>
-    		<artifactId>security</artifactId>
-  		<version>1.0-SNAPSHOT</version>
- 	   </dependency>
-
+        <!-- Supplier Client -->
+        <dependency>
+        	<groupId>org.komparator.eval</groupId>
+        	<artifactId>supplier-ws-cli</artifactId>
+        	<version>2.0</version>
+        	<scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -121,7 +139,6 @@
                     <killAfter>-1</killAfter>
                     <mainClass>${mainclass}</mainClass>
                     <arguments>
-						<!-- <argument>${ws.url}</argument> -->
                         <argument>${uddi.url}</argument>
                         <argument>${ws.name}</argument>
                     </arguments>
