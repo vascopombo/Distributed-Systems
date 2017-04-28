@@ -226,7 +226,7 @@ public class MediatorPortImpl implements MediatorPortType {
 			throwInvalidQuantity("Invalid quantity!");
 		}
 		
-		if (itemId.getProductId() == null || itemId.getSupplierId() == null)
+		if (itemId == null || itemId.getProductId() == null || itemId.getSupplierId() == null)
 			throwInvalidItemId("cart identifier cannot be null!");
 		itemId.setProductId(itemId.getProductId().trim());
 		itemId.setSupplierId(itemId.getSupplierId().trim());
@@ -239,6 +239,10 @@ public class MediatorPortImpl implements MediatorPortType {
 		Boolean alreadyExists = false;
 		try {
 			SupplierClient suppl = new SupplierClient(endpointManager.getUddiNaming().lookup(itemId.getSupplierId()));
+			ProductView current_prod = suppl.getProduct(itemId.getProductId());
+			if(current_prod == null){
+				throwInvalidItemId("This item does not exist on this supplier!");
+			}
 
 		if(cart == null){
 			cart = new CartView();
@@ -284,6 +288,8 @@ public class MediatorPortImpl implements MediatorPortType {
 			throwInvalidItemId("SupplierId is invalid!");
 		} catch (UDDINamingException e) {
 			throwInvalidItemId("SupplierId is invalid!");
+		} catch (BadProductId_Exception e1) {
+			throwInvalidItemId("ItemId is invalid!");
 		}
 		
 	}
