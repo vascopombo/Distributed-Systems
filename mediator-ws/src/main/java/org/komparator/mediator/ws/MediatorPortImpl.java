@@ -125,7 +125,7 @@ public class MediatorPortImpl implements MediatorPortType {
 				}
 			}
 			
-			orderByDescThenPrice(results);
+			orderByProdIdThenPrice(results);
 		} catch (UDDINamingException e) {
 		} catch (SupplierClientException e) {
 		} catch (BadText_Exception e) {
@@ -337,15 +337,15 @@ public class MediatorPortImpl implements MediatorPortType {
     
 	// Auxiliary operations --------------------------------------------------	
 	
-	private static void orderByDescThenPrice(List<ItemView> items) {
+	private static void orderByProdIdThenPrice(List<ItemView> items) {
 
 	    Collections.sort(items, new Comparator<ItemView>() {
 
 	        public int compare(ItemView o1, ItemView o2) {
 
-	            String desc1 = o1.getDesc();
-	            String desc2 = o2.getDesc();
-	            int sComp = desc1.compareTo(desc2);
+	            String prodId1 = o1.getItemId().getProductId();
+	            String prodId2 = o2.getItemId().getProductId();
+	            int sComp = prodId1.compareTo(prodId2);
 
 	            if (sComp != 0) {
 	               return sComp;

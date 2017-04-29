@@ -81,7 +81,15 @@ public class SearchItemsIT extends BaseIT {
 				product.setPrice(25);
 				product.setQuantity(20);
 				supp2.createProduct(product);
-			}				
+			}
+			{
+				ProductView product = new ProductView();
+				product.setId("g");
+				product.setDesc("gamaa");
+				product.setPrice(3);
+				product.setQuantity(20);
+				supp1.createProduct(product);
+			}
 			
 		} catch (UDDINamingException | SupplierClientException | BadProductId_Exception | BadProduct_Exception e) {
 			// TODO Auto-generated catch block
@@ -149,12 +157,15 @@ public class SearchItemsIT extends BaseIT {
 	@Test
 	public void itemsAreCorrectlyOrderedTest() throws InvalidText_Exception {
 		List<ItemView> products = mediatorClient.searchItems("gama");
-		assertEquals(products.size(),3);
-		assertEquals(products.get(0).getDesc(),"gama");
-		assertEquals(products.get(1).getDesc(),"vasco da gama");
-		assertEquals(products.get(1).getPrice(),5);
+		assertEquals(products.size(),4);
+		assertEquals(products.get(0).getDesc(),"gamaa");
+		assertEquals(products.get(0).getPrice(),3);
+		assertEquals(products.get(1).getDesc(),"gama");
+		assertEquals(products.get(1).getPrice(),25);
 		assertEquals(products.get(2).getDesc(),"vasco da gama");
 		assertEquals(products.get(2).getPrice(),10);
+		assertEquals(products.get(3).getDesc(),"vasco da gama");
+		assertEquals(products.get(3).getPrice(),5);
 	}	
 
 }
