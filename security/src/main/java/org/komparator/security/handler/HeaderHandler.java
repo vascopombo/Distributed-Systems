@@ -1,6 +1,8 @@
 package org.komparator.security.handler;
 
+import java.math.BigInteger;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -60,21 +62,42 @@ public class HeaderHandler implements SOAPHandler<SOAPMessageContext> {
 				SOAPMessage msg = smc.getMessage();
 				SOAPPart sp = msg.getSOAPPart();
 				SOAPEnvelope se = sp.getEnvelope();
-
+				
 				// add header
 				SOAPHeader sh = se.getHeader();
 				if (sh == null)
 					sh = se.addHeader();
 
 				// add header element (name, namespace prefix, namespace)
-				Name name = se.createName("myHeader", "d", "http://demo");
+				
+				//ID
+				Name name = se.createName("sourceHeader", "d", "urn:sources");
 				SOAPHeaderElement element = sh.addHeaderElement(name);
 
 				// add header element value
-				int value = 22;
-				String valueString = Integer.toString(value);
-				element.addTextNode(valueString);
+			//	System.out.println(se.getBaseURI());
+			//	System.out.println(smc.get(MessageContext.HTTP_REQUEST_HEADERS));
+				String wsName = "temp_name";
+				element.addTextNode(wsName);
 
+				//TOKEN
+				name = se.createName("tokenHeader", "d", "urn:tokens");
+				element = sh.addHeaderElement(name);
+				// add header element value
+				String value = Long.toString(new BigInteger(64, new Random()).longValue());
+				element.addTextNode(value);
+				
+				
+				//SIGNATURE
+				name = se.createName("SIGNATURE", "d", "http://demo");
+				element = sh.addHeaderElement(name);
+
+				// add header element value
+				//value = 22;
+				//valueString = Integer.toString(value);
+				//element.addTextNode(valueString);
+				
+								
 			} else {
 				System.out.println("Reading header in inbound SOAP message...");
 
@@ -91,7 +114,7 @@ public class HeaderHandler implements SOAPHandler<SOAPMessageContext> {
 				}
 
 				// get first header element
-				Name name = se.createName("myHeader", "d", "http://demo");
+				Name name = se.createName("tokenHeader", "d", "urn:sources");
 				Iterator it = sh.getChildElements(name);
 				// check header element
 				if (!it.hasNext()) {
@@ -138,5 +161,6 @@ public class HeaderHandler implements SOAPHandler<SOAPMessageContext> {
 	public void close(MessageContext messageContext) {
 		// nothing to clean up
 	}
+	
 
 }

@@ -8,9 +8,9 @@
         <!--handler>
             <handler-class>example.ws.handler.MessageContextHandler</handler-class>
         </handler-->
-        <!--handler>
-            <handler-class>example.ws.handler.HeaderHandler</handler-class>
-        </handler-->
+        <handler>
+            <handler-class>org.komparator.security.handler.HeaderHandler</handler-class>
+        </handler>
         <handler>
             <handler-class>org.komparator.security.handler.LoggingHandler</handler-class>
         </handler>
