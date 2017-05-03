@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 
 import org.komparator.supplier.ws.BadProductId_Exception;
@@ -28,7 +29,7 @@ import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINaming;
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDINamingException;
 import pt.ulisboa.tecnico.sdis.ws.uddi.UDDIRecord;
 
-
+@HandlerChain(file = "/mediator-ws_handler-chain.xml")
 @WebService(
 		endpointInterface = "org.komparator.mediator.ws.MediatorPortType", 
 		wsdlLocation = "mediator.1_0.wsdl", 
