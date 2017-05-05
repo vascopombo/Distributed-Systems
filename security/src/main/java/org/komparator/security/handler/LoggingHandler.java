@@ -20,7 +20,6 @@ public class LoggingHandler implements SOAPHandler<SOAPMessageContext> {
 	//
 	// Handler interface implementation
 	//
-
 	/**
 	 * Gets the header blocks that can be processed by this Handler instance. If
 	 * null, processes all.
@@ -69,6 +68,8 @@ public class LoggingHandler implements SOAPHandler<SOAPMessageContext> {
 		Boolean outbound = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
 		// print current timestamp
+		System.out.println();
+		System.out.println("[LoggingHandler:BEGIN]");
 		System.out.print("[");
 		System.out.print(dateFormatter.format(new Date()));
 		System.out.print("] ");
@@ -79,19 +80,21 @@ public class LoggingHandler implements SOAPHandler<SOAPMessageContext> {
 		else
 			System.out.print(" INbound");
 		System.out.println(" SOAP message:");
-
 		SOAPMessage message = smc.getMessage();
+		
+		
 		try {
 			message.writeTo(System.out);
-			System.out.println(); // add a newline after message
-
 		} catch (SOAPException se) {
 			System.out.print("Ignoring SOAPException in handler: ");
 			System.out.println(se);
+			
 		} catch (IOException ioe) {
 			System.out.print("Ignoring IOException in handler: ");
 			System.out.println(ioe);
 		}
+		System.out.println("\n[LoggingHandler:END]");
+		//System.out.println(); // add a newline after message
 	}
 
 }

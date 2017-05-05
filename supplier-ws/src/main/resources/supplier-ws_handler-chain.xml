@@ -2,17 +2,46 @@
 
 <handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
     <handler-chain>
-	<handler>
+            
+		<handler>
             <handler-class>org.komparator.security.handler.LoggingHandler</handler-class>
         </handler>
-        <!--handler>
-            <handler-class>example.ws.handler.MessageContextHandler</handler-class>
-        </handler-->
+
         <handler>
-            <handler-class>org.komparator.security.handler.HeaderHandler</handler-class>
+            <handler-class>org.komparator.security.handler.TokenHandler</handler-class>
         </handler>
+        <handler>
+            <handler-class>org.komparator.security.handler.IDHandler</handler-class>
+        </handler>
+      
+       <!--  Test handler used to simulate attacks -->        
+		<!-- 
+        <handler>
+            <handler-class>org.komparator.security.handler.FreshnessTestHandler</handler-class>
+        </handler>      
+        -->
+       <!--  End of test handler -->
+       
+        <handler>
+            <handler-class>org.komparator.security.handler.SignHandler</handler-class>
+        </handler>  
+       
+       
+       <!--  Test handlers used to simulate attacks --> 
+       <!-- 
+        <handler>
+            <handler-class>org.komparator.security.handler.AuthenticityTestHandler</handler-class>
+        </handler> -->
+       <!-- 
+        <handler>
+            <handler-class>org.komparator.security.handler.IntegrityTestHandler</handler-class>
+        </handler>    -->
+        
+       <!--  End of test handlers -->	 
+        
         <handler>
             <handler-class>org.komparator.security.handler.LoggingHandler</handler-class>
         </handler>
+
     </handler-chain>
 </handler-chains>

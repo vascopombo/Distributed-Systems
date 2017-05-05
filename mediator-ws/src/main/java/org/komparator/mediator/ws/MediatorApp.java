@@ -1,5 +1,7 @@
 package org.komparator.mediator.ws;
 
+import org.komparator.security.handler.IDHandler;
+
 public class MediatorApp {
 
 	public static void main(String[] args) throws Exception {
@@ -21,6 +23,7 @@ public class MediatorApp {
 		} else if (args.length >= 3) {
 			uddiURL = args[0];
 			wsName = args[1];
+			IDHandler.wsName = wsName;
 			wsURL = args[2];
 			endpoint = new MediatorEndpointManager(uddiURL, wsName, wsURL);
 			endpoint.setVerbose(true);
