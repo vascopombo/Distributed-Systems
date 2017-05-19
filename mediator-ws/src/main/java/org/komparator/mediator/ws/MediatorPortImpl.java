@@ -231,11 +231,11 @@ public class MediatorPortImpl implements MediatorPortType {
 		} catch (CreditCardClientException e) {
 		} catch (UDDINamingException e){
 		}
-		
+		/*
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
-		}
+		}*/
 		return shopResult;
 	}
 
