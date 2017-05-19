@@ -1,6 +1,7 @@
 package org.komparator.mediator.ws;
 
 import java.io.IOException;
+import java.util.Timer;
 
 import javax.xml.ws.Endpoint;
 
@@ -43,6 +44,8 @@ public class MediatorEndpointManager {
 	/** output option **/
 	private boolean verbose = true;
 
+	Timer timer = new Timer(true);
+	
 	public boolean isVerbose() {
 		return verbose;
 	}
@@ -52,17 +55,24 @@ public class MediatorEndpointManager {
 	}
 
 	/** constructor with provided UDDI location, WS name, and WS URL */
-	public MediatorEndpointManager(String uddiURL, String wsName, String wsURL) {
+	public MediatorEndpointManager(String uddiURL, String wsName, String wsURL, boolean primary) {
 		this.uddiURL = uddiURL;
 		this.wsName = wsName;
 		this.wsURL = wsURL;
+		if(!primary){
+			LifeProof.iAmPrimary = false;
+		}
+		
 	}
 
 	/** constructor with provided web service URL */
-	public MediatorEndpointManager(String wsURL) {
+	public MediatorEndpointManager(String wsURL, boolean primary) {
 		if (wsURL == null)
 			throw new NullPointerException("Web Service URL cannot be null!");
 		this.wsURL = wsURL;
+		if(!primary){
+			LifeProof.iAmPrimary = false;
+		}		
 	}
 
 	/* end point management */
@@ -83,7 +93,16 @@ public class MediatorEndpointManager {
 			}
 			throw e;
 		}
-		publishToUDDI();
+		if(LifeProof.iAmPrimary){
+			publishToUDDI();
+			System.out.println("This is the primary Mediator.");
+		}
+		else{
+			System.out.println("This is the secondary Mediator. It has not been published to UDDI.");
+		}
+		
+		timer.scheduleAtFixedRate(new LifeProof(), 3000, LifeProof.DELAY);
+		
 	}
 
 	public void awaitConnections() {
@@ -102,6 +121,7 @@ public class MediatorEndpointManager {
 
 	public void stop() throws Exception {
 		try {
+			timer.cancel();
 			if (endpoint != null) {
 				// stop end point
 				endpoint.stop();

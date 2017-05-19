@@ -35,13 +35,22 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
 
             <xs:element name="NotEnoughItems" type="tns:NotEnoughItems"/>
 
-            <xs:element name="addToCart" type="tns:addToCart"/>
+            <xs:element name="addToCart2" type="tns:addToCart2"/>
 
-            <xs:element name="addToCartResponse" type="tns:addToCartResponse"/>
+            <xs:element name="addToCart2Response" type="tns:addToCart2Response"/>
+            
+         
+         
+            
+            <xs:element name="updateShoppingHistory" type="tns:updateShoppingHistory"/>
 
-            <xs:element name="buyCart" type="tns:buyCart"/>
+            <xs:element name="updateCart" type="tns:updateCart"/>  
+         
+            
 
-            <xs:element name="buyCartResponse" type="tns:buyCartResponse"/>
+            <xs:element name="buyCart2" type="tns:buyCart2"/>
+
+            <xs:element name="buyCart2Response" type="tns:buyCart2Response"/>
 
             <xs:element name="clear" type="tns:clear"/>
 
@@ -98,6 +107,7 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                     <xs:element name="price" type="xs:int"/>
                 </xs:sequence>
             </xs:complexType>
+            
 
             <xs:complexType name="itemIdView">
                 <xs:sequence>
@@ -136,14 +146,15 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                 </xs:sequence>
             </xs:complexType>
 
-            <xs:complexType name="buyCart">
+            <xs:complexType name="buyCart2">
                 <xs:sequence>
                     <xs:element name="cartId" type="xs:string" minOccurs="0"/>
                     <xs:element name="creditCardNr" type="xs:string" minOccurs="0"/>
+                    <xs:element name="identifier" type="xs:long" minOccurs="0"/>
                 </xs:sequence>
             </xs:complexType>
 
-            <xs:complexType name="buyCartResponse">
+            <xs:complexType name="buyCart2Response">
                 <xs:sequence>
                     <xs:element name="shopResult" type="tns:shoppingResultView" minOccurs="0"/>
                 </xs:sequence>
@@ -195,15 +206,37 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                 <xs:sequence/>
             </xs:complexType>
 
-            <xs:complexType name="addToCart">
+            <xs:complexType name="addToCart2">
                 <xs:sequence>
                     <xs:element name="cartId" type="xs:string" minOccurs="0"/>
                     <xs:element name="itemId" type="tns:itemIdView" minOccurs="0"/>
                     <xs:element name="itemQty" type="xs:int"/>
+                    <xs:element name="identifier" type="xs:long"/>
                 </xs:sequence>
             </xs:complexType>
+            
+            
+            
+            
+            
+            
+            <xs:complexType name="updateShoppingHistory">
+                <xs:sequence>
+                    <xs:element name="object" type="tns:shoppingResultView" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>            
+            
+            <xs:complexType name="updateCart">
+                <xs:sequence>
+                    <xs:element name="cartId" type="xs:string" minOccurs="0"/>
+                    <xs:element name="cart" type="tns:cartView" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>      
 
-            <xs:complexType name="addToCartResponse">
+
+
+
+            <xs:complexType name="addToCart2Response">
                 <xs:sequence/>
             </xs:complexType>
 
@@ -236,6 +269,16 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                     <xs:element name="message" type="xs:string" minOccurs="0"/>
                 </xs:sequence>
             </xs:complexType>
+
+             <xs:complexType name="imAlive">
+                <xs:sequence />
+            </xs:complexType>
+            <xs:element name="imAlive" type="tns:imAlive" />
+            
+            <xs:complexType name="imAliveResponse">
+                <xs:sequence />
+            </xs:complexType>
+
 
             <xs:simpleType name="result">
                 <xs:restriction base="xs:string">
@@ -278,11 +321,11 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
     <message name="InvalidText">
         <part name="fault" element="tns:InvalidText"/>
     </message>
-    <message name="buyCart">
-        <part name="parameters" element="tns:buyCart"/>
+    <message name="buyCart2">
+        <part name="parameters" element="tns:buyCart2"/>
     </message>
-    <message name="buyCartResponse">
-        <part name="parameters" element="tns:buyCartResponse"/>
+    <message name="buyCart2Response">
+        <part name="parameters" element="tns:buyCart2Response"/>
     </message>
     <message name="InvalidCartId">
         <part name="fault" element="tns:InvalidCartId"/>
@@ -293,11 +336,28 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
     <message name="InvalidCreditCard">
         <part name="fault" element="tns:InvalidCreditCard"/>
     </message>
-    <message name="addToCart">
-        <part name="parameters" element="tns:addToCart"/>
+    <message name="addToCart2">
+        <part name="parameters" element="tns:addToCart2"/>
     </message>
-    <message name="addToCartResponse">
-        <part name="parameters" element="tns:addToCartResponse"/>
+    
+    
+    
+    
+    
+    <message name="updateShoppingHistory">
+        <part name="parameters" element="tns:updateShoppingHistory"/>
+    </message>    
+  
+    <message name="updateCart">
+        <part name="parameters" element="tns:updateCart"/>
+    </message>      
+    
+    
+    
+    
+    
+    <message name="addToCart2Response">
+        <part name="parameters" element="tns:addToCart2Response"/>
     </message>
     <message name="InvalidQuantity">
         <part name="fault" element="tns:InvalidQuantity"/>
@@ -317,6 +377,9 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
     <message name="shopHistoryResponse">
         <part name="parameters" element="tns:shopHistoryResponse"/>
     </message>
+    <message name="imAlive">
+        <part name="parameters" element="tns:imAlive" />
+    </message>    
 
     <!-- Port Type (Interface) -->
     <portType name="MediatorPortType">
@@ -338,20 +401,20 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
             <output wsam:Action="http://ws.mediator.komparator.org/Mediator/searchItemsResponse" message="tns:searchItemsResponse"/>
             <fault message="tns:InvalidText" name="InvalidText" wsam:Action="http://ws.mediator.komparator.org/Mediator/searchItems/Fault/InvalidText"/>
         </operation>
-        <operation name="buyCart">
-            <input wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCartRequest" message="tns:buyCart"/>
-            <output wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCartResponse" message="tns:buyCartResponse"/>
-            <fault message="tns:InvalidCartId" name="InvalidCartId" wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart/Fault/InvalidCartId"/>
-            <fault message="tns:EmptyCart" name="EmptyCart" wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart/Fault/EmptyCart"/>
-            <fault message="tns:InvalidCreditCard" name="InvalidCreditCard" wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart/Fault/InvalidCreditCard"/>
+        <operation name="buyCart2">
+            <input wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart2Request" message="tns:buyCart2"/>
+            <output wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart2Response" message="tns:buyCart2Response"/>
+            <fault message="tns:InvalidCartId" name="InvalidCartId" wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart2/Fault/InvalidCartId"/>
+            <fault message="tns:EmptyCart" name="EmptyCart" wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart2/Fault/EmptyCart"/>
+            <fault message="tns:InvalidCreditCard" name="InvalidCreditCard" wsam:Action="http://ws.mediator.komparator.org/Mediator/buyCart2/Fault/InvalidCreditCard"/>
         </operation>
-        <operation name="addToCart">
-            <input wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCartRequest" message="tns:addToCart"/>
-            <output wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCartResponse" message="tns:addToCartResponse"/>
-            <fault message="tns:InvalidCartId" name="InvalidCartId" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart/Fault/InvalidCartId"/>
-            <fault message="tns:InvalidItemId" name="InvalidItemId" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart/Fault/InvalidItemId"/>
-            <fault message="tns:InvalidQuantity" name="InvalidQuantity" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart/Fault/InvalidQuantity"/>
-            <fault message="tns:NotEnoughItems" name="NotEnoughItems" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart/Fault/NotEnoughItems"/>
+        <operation name="addToCart2">
+            <input wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart2Request" message="tns:addToCart2"/>
+            <output wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart2Response" message="tns:addToCart2Response"/>
+            <fault message="tns:InvalidCartId" name="InvalidCartId" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart2/Fault/InvalidCartId"/>
+            <fault message="tns:InvalidItemId" name="InvalidItemId" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart2/Fault/InvalidItemId"/>
+            <fault message="tns:InvalidQuantity" name="InvalidQuantity" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart2/Fault/InvalidQuantity"/>
+            <fault message="tns:NotEnoughItems" name="NotEnoughItems" wsam:Action="http://ws.mediator.komparator.org/Mediator/addToCart2/Fault/NotEnoughItems"/>
         </operation>
         <operation name="ping">
             <input wsam:Action="http://ws.mediator.komparator.org/Mediator/pingRequest" message="tns:ping"/>
@@ -361,6 +424,28 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
             <input wsam:Action="http://ws.mediator.komparator.org/Mediator/shopHistoryRequest" message="tns:shopHistory"/>
             <output wsam:Action="http://ws.mediator.komparator.org/Mediator/shopHistoryResponse" message="tns:shopHistoryResponse"/>
         </operation>
+
+        <operation name="imAlive">
+            <input
+                wsam:Action="http://ws.mediator.komparator.org/Mediator/imAliveRequest"
+                message="tns:imAlive" />
+        </operation>
+
+
+
+        <operation name="updateShoppingHistory">
+            <input
+                wsam:Action="http://ws.mediator.komparator.org/Mediator/updateShoppingHistoryRequest"
+                message="tns:updateShoppingHistory"/>       
+        </operation>
+        
+        <operation name="updateCart">
+            <input
+                wsam:Action="http://ws.mediator.komparator.org/Mediator/updateCartRequest"
+                message="tns:updateCart"/>       
+        </operation>
+
+
     </portType>
 
     <!-- SOAP/HTTP Binding -->
@@ -408,7 +493,7 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                 <soap:fault name="InvalidText" use="literal"/>
             </fault>
         </operation>
-        <operation name="buyCart">
+        <operation name="buyCart2">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>
@@ -426,7 +511,7 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                 <soap:fault name="InvalidCreditCard" use="literal"/>
             </fault>
         </operation>
-        <operation name="addToCart">
+        <operation name="addToCart2">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>
@@ -465,6 +550,31 @@ wsdl:service, wsdl:portType, wsdl:types and wsdl:binding below
                 <soap:body use="literal"/>
             </output>
         </operation>
+
+        <operation name="imAlive">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+          
+        </operation>
+
+        <operation name="updateShoppingHistory">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>       
+        </operation>
+
+
+        <operation name="updateCart">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>       
+        </operation>
+
+
     </binding>
 
     <!-- Service -->

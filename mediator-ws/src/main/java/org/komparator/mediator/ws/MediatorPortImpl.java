@@ -32,7 +32,7 @@ import pt.ulisboa.tecnico.sdis.ws.uddi.UDDIRecord;
 @HandlerChain(file = "/mediator-ws_handler-chain.xml")
 @WebService(
 		endpointInterface = "org.komparator.mediator.ws.MediatorPortType", 
-		wsdlLocation = "mediator.1_0.wsdl", 
+		wsdlLocation = "mediator.2_0.wsdl", 
 		name = "MediatorWebService", 
 		portName = "MediatorPort", 
 		targetNamespace = "http://ws.mediator.komparator.org/", 
@@ -45,7 +45,9 @@ public class MediatorPortImpl implements MediatorPortType {
 	private static long idCounter = 0;
 	private Map<String,CartView> cartMap = new ConcurrentHashMap<String,CartView>();
 	private List<ShoppingResultView> shopRecords = new CopyOnWriteArrayList<ShoppingResultView>();
-
+	private Map<Long,ShoppingResultView> shopIdentifierMap= new ConcurrentHashMap<Long,ShoppingResultView>();
+	private List<Long> usedIdentifiers = new ArrayList<>();
+	
 	public MediatorPortImpl(MediatorEndpointManager endpointManager) {
 		this.endpointManager = endpointManager;
 	}
@@ -55,15 +57,23 @@ public class MediatorPortImpl implements MediatorPortType {
 		//clear suppliers
 		UDDINaming uddi = endpointManager.getUddiNaming();
 		try {
-			Collection<UDDIRecord> supplierRecords = uddi.listRecords("T35_Supplier%");
-			for(UDDIRecord record: supplierRecords){
-				SupplierClient clnt = new SupplierClient(record.getUrl());
-				clnt.clear();
-			}			
+		
 			//clear local variables
 			idCounter = 0;
 			cartMap.clear();
 			shopRecords.clear();
+			//new: clear secondary
+			if(LifeProof.iAmPrimary){
+				Collection<UDDIRecord> supplierRecords = uddi.listRecords("T35_Supplier%");
+				for(UDDIRecord record: supplierRecords){
+					SupplierClient clnt = new SupplierClient(record.getUrl());
+					clnt.clear();
+				}
+				
+				if(LifeProof.primaryIsAlive){
+					LifeProof.mc.clear();
+				}
+			}
 		} catch (UDDINamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,9 +146,17 @@ public class MediatorPortImpl implements MediatorPortType {
 	}
 
 	@Override
-	public ShoppingResultView buyCart(String cartId, String creditCardNr)
-			throws EmptyCart_Exception, InvalidCartId_Exception, InvalidCreditCard_Exception {
+	public ShoppingResultView buyCart2(String cartId, String creditCardNr, Long identifier)
+			throws EmptyCart_Exception, InvalidCartId_Exception, InvalidCreditCard_Exception {	
 		
+		if(usedIdentifiers.contains(identifier)){
+			//resend same output as last time
+			return shopIdentifierMap.get(identifier);
+		}
+		else {
+			usedIdentifiers.add(identifier);
+			
+		}
 		if (cartId == null)
 			throwInvalidCartId("cart identifier cannot be null!");
 		cartId = cartId.trim();
@@ -200,6 +218,11 @@ public class MediatorPortImpl implements MediatorPortType {
 		
 		shopResult.setId(createID());
 		shopResult.setTotalPrice(purchasedPrice);
+		shopRecords.add(shopResult);
+		shopIdentifierMap.put(identifier,shopResult);
+		//new: update secondary mediator
+		LifeProof.updateShoppingHistory(shopResult);
+		LifeProof.updateCart(cartId, cart);
 		}
 
 		
@@ -209,13 +232,26 @@ public class MediatorPortImpl implements MediatorPortType {
 		} catch (UDDINamingException e){
 		}
 		
-
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+		}
 		return shopResult;
 	}
 
 	@Override
-	public void addToCart(String cartId, ItemIdView itemId, int itemQty) throws InvalidCartId_Exception,
+	public void addToCart2(String cartId, ItemIdView itemId, int itemQty, long identifier) throws InvalidCartId_Exception,
 			InvalidItemId_Exception, InvalidQuantity_Exception, NotEnoughItems_Exception {
+		
+		if(usedIdentifiers.contains(identifier)){
+			//reject message
+			throw new RuntimeException();
+			
+		}
+
+		else {
+			usedIdentifiers.add(identifier);
+		}
 		
 		if (cartId == null)
 			throwInvalidCartId("cart identifier cannot be null!");
@@ -285,6 +321,9 @@ public class MediatorPortImpl implements MediatorPortType {
 			cart.getItems().add(cartitem);
 		}
 		}
+		
+		LifeProof.updateCart(cartId, cart);
+		
 		} catch (SupplierClientException e) {
 			throwInvalidItemId("SupplierId is invalid!");
 		} catch (UDDINamingException e) {
@@ -439,5 +478,31 @@ public class MediatorPortImpl implements MediatorPortType {
 		throw new InvalidText_Exception(message, faultInfo);
 	}	
 
+	/** staying alive */
+	@Override
+	public void imAlive(){
+		if(!LifeProof.iAmPrimary){
+			LifeProof.primaryIsAlive = true;
+			LifeProof.lastPing = System.currentTimeMillis();
+			System.out.println("Primary Mediator is alive.");
+		}
+	}
+	
+	@Override
+	public void updateShoppingHistory(ShoppingResultView object){
+		if(!LifeProof.iAmPrimary){
+			shopRecords.add(object);
+			idCounter++;
+			System.out.println("New shopping history received.");
+		}
+	}
+	
+	@Override
+	public void updateCart(String cartId, CartView cart){
+		if(!LifeProof.iAmPrimary){
+			cartMap.put(cartId, cart);
+			System.out.println("New cart received.");
+		}
+	}
 
 }

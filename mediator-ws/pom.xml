@@ -19,8 +19,14 @@
 
         
       	<uddi.url>http://t35:56vMW2kU@uddi.sd.rnl.tecnico.ulisboa.pt:9090/</uddi.url>
-        <ws.name>T35_Mediator</ws.name>
-        <ws.url>http://localhost:8080/mediator-ws/endpoint</ws.url>
+    <group.id>T35</group.id>
+
+    	<ws.i>1</ws.i>
+
+    	<ws.host>localhost</ws.host>
+    	<ws.port>807${ws.i}</ws.port>
+    	<ws.url>http://${ws.host}:${ws.port}/mediator-ws/endpoint</ws.url>
+    	<ws.name>${group.id}_Mediator</ws.name>
     </properties>
 
     <dependencies>
@@ -41,6 +47,11 @@
         	<artifactId>supplier-ws-cli</artifactId>
         <version>1.0-SNAPSHOT</version>
     	</dependency>
+        <dependency>
+        	<groupId>org.komparator.T35</groupId>
+        	<artifactId>mediator-ws-cli</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    	</dependency>    	
     	<dependency>
         	<groupId>org.komparator.T35</groupId>
         	<artifactId>cc-ws-cli</artifactId>
@@ -97,6 +108,7 @@
                         <argument>${uddi.url}</argument>
                         <argument>${ws.name}</argument>
                         <argument>${ws.url}</argument>
+                        <argument>${ws.i}</argument>
                     </arguments>
                 </configuration>
             </plugin>

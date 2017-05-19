@@ -8,7 +8,7 @@ public class MediatorApp {
 		// Check arguments
 		if (args.length == 0 || args.length == 2) {
 			System.err.println("Argument(s) missing!");
-			System.err.println("Usage: java " + MediatorApp.class.getName() + " wsURL OR uddiURL wsName wsURL");
+			System.err.println("Usage: java " + MediatorApp.class.getName() + " wsURL primary OR uddiURL wsName wsURL primary");
 			return;
 		}
 		String uddiURL = null;
@@ -17,17 +17,18 @@ public class MediatorApp {
 
 		// Create server implementation object, according to options
 		MediatorEndpointManager endpoint = null;
-		if (args.length == 1) {
+		if (args.length == 2) {
 			wsURL = args[0];
-			endpoint = new MediatorEndpointManager(wsURL);
+			endpoint = new MediatorEndpointManager(wsURL, args[1].equals("1"));
 		} else if (args.length >= 3) {
 			uddiURL = args[0];
 			wsName = args[1];
 			IDHandler.wsName = wsName;
 			wsURL = args[2];
-			endpoint = new MediatorEndpointManager(uddiURL, wsName, wsURL);
+			endpoint = new MediatorEndpointManager(uddiURL, wsName, wsURL, args[3].equals("1"));
 			endpoint.setVerbose(true);
 		}
+		LifeProof.endpoint = endpoint;
 
 		try {
 			endpoint.start();
